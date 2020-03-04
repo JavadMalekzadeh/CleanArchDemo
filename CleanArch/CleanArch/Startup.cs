@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CleanArch.Infra.Data.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -24,6 +25,15 @@ namespace CleanArch
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.Configure<Setting>(
+                options =>
+                {
+                    options.ConnectionString = Configuration.GetSection("MongoDB:ConnectionString").Value;
+                    options.Database = Configuration.GetSection("MongoDB:Database").Value;
+                }
+
+            );
+            services.AddTransient<IUniversityDBContext, UniversityDBContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
